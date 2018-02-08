@@ -1,57 +1,66 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://github.com/vuejs/vue-cli/tree/dev/docs" target="_blank">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org/en/essentials/getting-started.html" target="_blank">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org/en/intro.html" target="_blank">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org/en" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    <el-upload
+      class="upload-demo"
+      ref="upload"
+      action="https://upload-z2.qiniup.com"
+      :auto-upload="autoUpload"
+      :on-success="handleSuccess"
+      :file-list="fileList2"
+      :before-upload="beforeUpload"
+      :data="postData"
+      list-type="picture">
+      <el-button size="small" type="primary">选取图片</el-button>
+    </el-upload>
+    <el-button size="small" type="primary" @click="submitUpload">确认上传</el-button>
+    <el-select v-model="value" placeholder="请选择">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
+  data() {
+    return {
+      autoUpload: false,
+      fileList2: [],
+      postData: {
+        token: 'qG4ngbB0PgTu3ZWNlbZbIjmWPLaF4C7l0_6b_ZiS:1Lh87f5l4_kXWU9onUx8MKbKe4g=:eyJzY29wZSI6InRlc3RzcGFjZSIsImRlYWRsaW5lIjoxNTE4MTA0MTgwfQ==',
+        key: ''
+      },
+      options: [{
+        value: '1',
+        label: '1',
+      }, {
+        value: '2',
+        label: '2'
+      }],
+      value: '',
+    };
+  },
+
+  methods: {
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+
+    handleSuccess(res, file) {
+      console.log(res, file);
+    },
+
+    beforeUpload(file) {
+      this.postData.key = this.value + '_' + file.name;
+    }
+  },
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>
